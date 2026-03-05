@@ -24,11 +24,28 @@ function initializeAuth() {
       window.currentUser = JSON.parse(userData);
       authToken = stored;
       currentUser = window.currentUser;
-      // Validar token con servidor (opcional)
-      validateTokenWithServer();
-      // Cargar datos del usuario
-      loadAppData();
+      
+      // Ocultar modal de autenticación primero
       hideAuthModal();
+      
+      // Validar token con servidor (opcional) - modo offline si falla
+      validateTokenWithServer();
+      
+      // Cargar datos del usuario Y actualizar UI
+      loadAppData().then(() => {
+        // Actualizar todas las vistas después de cargar datos
+        actualizarListaClientes();
+        actualizarListaProductosYStock();
+        actualizarListaVentas();
+        actualizarResumenCuentas();
+        actualizarMovimientosCaja();
+        actualizarHistorial();
+        renderBilletesHistorial();
+        populateCajaDayInputs();
+        
+        console.log('Datos cargados y UI actualizada tras restaurar sesión');
+      });
+      
       return true;
     } catch (e) {
       console.error('Error al restaurar sesión:', e);
@@ -224,8 +241,18 @@ async function handleLogin() {
     showToast(`¡Bienvenido ${currentUser.usuario}!`, 'success');
     hideAuthModal();
     
-    // Cargar datos del usuario
-    loadAppData();
+    // Cargar datos del usuario y actualizar UI
+    loadAppData().then(() => {
+      actualizarListaClientes();
+      actualizarListaProductosYStock();
+      actualizarListaVentas();
+      actualizarResumenCuentas();
+      actualizarMovimientosCaja();
+      actualizarHistorial();
+      renderBilletesHistorial();
+      populateCajaDayInputs();
+      console.log('Datos cargados tras login');
+    });
   } catch (err) {
     console.error('Error en login:', err);
     // MODO FALLBACK: Si no hay servidor, permitir acceso local
@@ -240,7 +267,19 @@ async function handleLogin() {
     
     showToast(`¡Bienvenido ${usuario}! (modo offline)`, 'success');
     hideAuthModal();
-    loadAppData();
+    
+    // Cargar datos del usuario y actualizar UI
+    loadAppData().then(() => {
+      actualizarListaClientes();
+      actualizarListaProductosYStock();
+      actualizarListaVentas();
+      actualizarResumenCuentas();
+      actualizarMovimientosCaja();
+      actualizarHistorial();
+      renderBilletesHistorial();
+      populateCajaDayInputs();
+      console.log('Datos cargados tras login (offline)');
+    });
   }
 }
 

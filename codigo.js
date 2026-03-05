@@ -299,7 +299,15 @@ function saveAppData() {
   // Verificar si hay token de autenticación (puede estar en window o como variable global)
   const token = typeof authToken !== 'undefined' ? authToken : (typeof window.authToken !== 'undefined' ? window.authToken : null);
   
-  // Si hay autenticación, guardar en servidor
+  // SIEMPRE guardar en localStorage como respaldo principal (incluso si hay servidor)
+  try {
+    localStorage.setItem('appData', JSON.stringify(appData));
+    console.log('Datos guardados en localStorage:', appData);
+  } catch (e) {
+    console.error('Error guardando datos en localStorage:', e);
+  }
+  
+  // Si hay autenticación, intentar guardar en servidor
   if (token) {
     fetch('/api/appdata', {
       method: 'POST',
@@ -310,39 +318,24 @@ function saveAppData() {
       body: JSON.stringify(appData)
     }).then(res => {
       if (!res.ok) throw new Error('Server save failed');
-      showToast('Datos guardados en servidor', 'success');
       console.log('Datos guardados en servidor (appData):', appData);
     }).catch(err => {
-      console.warn('Error guardando en servidor, usando localStorage:', err);
-      try {
-        localStorage.setItem('appData', JSON.stringify(appData));
-        showToast('Guardado localmente (fallback)', 'warning');
-        console.log('Datos guardados en localStorage (fallback):', appData);
-      } catch (e) {
-        console.error('Error guardando datos en localStorage:', e);
-        showToast('Error guardando datos localmente', 'error');
-      }
+      console.warn('Error guardando en servidor, datos preservados en localStorage:', err);
     });
-  } else {
-    // Sin autenticación, guardar en localStorage
-    try {
-      localStorage.setItem('appData', JSON.stringify(appData));
-      console.log('Datos guardados en localStorage:', appData);
-    } catch (e) {
-      console.error('Error guardando datos en localStorage:', e);
-      showToast('Error guardando datos localmente', 'error');
-    }
   }
 }
 
 /* Función para cargar todos los datos: intenta servidor con autenticación, luego fallback a localStorage */
 async function loadAppData() {
+  // Obtener el token de autenticación desde window (expuesto por auth.js)
+  const token = typeof window.authToken !== 'undefined' ? window.authToken : null;
+  
   // Si hay autenticación, intenta cargar del servidor primero
-  if (typeof authToken !== 'undefined' && authToken) {
+  if (token) {
     try {
       const res = await fetch('/api/appdata', {
         headers: {
-          'Authorization': `Bearer ${authToken}`
+          'Authorization': `Bearer ${token}`
         }
       });
       if (!res.ok) throw new Error('No server data');
