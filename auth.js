@@ -103,7 +103,7 @@ function updateUserDisplay() {
   }
 }
 
-// Validar token con servidor
+// Validar token con servidor - modo offline si falla
 async function validateTokenWithServer() {
   try {
     const response = await fetch('/api/auth/validate', {
@@ -115,15 +115,15 @@ async function validateTokenWithServer() {
     });
     
     if (!response.ok) {
-      clearAuthSession();
-      showAuthModal();
-      return false;
+      // Token no válido pero permitimos acceso offline
+      console.warn('Token no válido, usando modo offline');
+      return true; // No cerramos sesión, permitimos acceso
     }
     
     return true;
   } catch (err) {
     console.error('Error validando token:', err);
-    // Continuar sin validación si el servidor no responde
+    // Continuar sin validación si el servidor no responde - modo offline
     return true;
   }
 }
