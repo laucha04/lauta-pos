@@ -136,7 +136,7 @@ function clearAuthSession() {
   authToken = null;
   localStorage.removeItem('authToken');
   localStorage.removeItem('userData');
-  localStorage.removeItem('appData');
+  // NO eliminamos appData para preservar los datos de la app
 }
 
 // FUNCIONES DE FORMULARIO
@@ -334,13 +334,8 @@ async function handleLogout() {
     console.error('Error en logout:', err);
   }
   
-  // Limpiar sesión local
+  // Limpiar sesión local (sin borrar los datos de la app)
   clearAuthSession();
-  
-  // Limpiar datos de la app
-  if (typeof window.clearAppData === 'function') {
-    window.clearAppData();
-  }
   
   showToast('Sesión cerrada', 'success');
   showAuthModal();
