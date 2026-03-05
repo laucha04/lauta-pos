@@ -1493,7 +1493,7 @@ function actualizarTotalesMedios() {
   const elMercado = document.getElementById('caja-total-mercado');
   const totals = calcularTotalesPorMedios();
   if (elTarCred) elTarCred.textContent = `Tarjeta Crédito: $${(totals.tarjeta_credito || 0).toFixed(2)}`;
-  if (elTarDeb) elTarDeb.textContent = `Tarjeta Débito: $${(0).toFixed(2)}`;
+if (elTarDeb) elTarDeb.textContent = `Tarjeta Débito: $${(totals.tarjeta_debito || 0).toFixed(2)}`;
   if (elQR) elQR.textContent = `QR: $${(totals.qr || 0).toFixed(2)}`;
   if (elTransfer) elTransfer.textContent = `Transferencia: $${(totals.transferencia || 0).toFixed(2)}`;
   if (elMercado) elMercado.textContent = `Mercado Pago: $${(totals.mercado_pago || 0).toFixed(2)}`;
