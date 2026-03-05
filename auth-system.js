@@ -13,8 +13,8 @@
   // CONFIGURACIÓN
   // ============================================
   const AUTH_CONFIG = {
-    TOKEN_KEY: 'kevstore_auth_token',
-    USER_KEY: 'kevstore_user_data',
+    TOKEN_KEY: 'authToken',  // Compatibilidad con auth.js original
+    USER_KEY: 'userData',      // Compatibilidad con auth.js original
     SESSION_KEY: 'kevstore_session',
     TOKEN_EXPIRY: 7 * 24 * 60 * 60 * 1000, // 7 días en ms
     API_ENDPOINTS: {
@@ -563,13 +563,25 @@
           hideAuthModal();
           
           // Llamar a showMainApp después de un pequeño delay
-          setTimeout(() => {
+          setTimeout(async () => {
             if (typeof window.showMainApp === 'function') {
               window.showMainApp();
             }
+            
+            // Cargar datos de la app después de mostrar la interfaz
             if (typeof window.loadAppData === 'function') {
-              window.loadAppData();
+              await window.loadAppData();
             }
+            
+            // Forzar actualización de todas las listas
+            if (typeof window.actualizarListaClientes === 'function') window.actualizarListaClientes();
+            if (typeof window.actualizarListaProductosYStock === 'function') window.actualizarListaProductosYStock();
+            if (typeof window.actualizarListaVentas === 'function') window.actualizarListaVentas();
+            if (typeof window.actualizarResumenCuentas === 'function') window.actualizarResumenCuentas();
+            if (typeof window.actualizarMovimientosCaja === 'function') window.actualizarMovimientosCaja();
+            if (typeof window.actualizarHistorial === 'function') window.actualizarHistorial();
+            
+            console.log('Datos cargados y UI actualizada para:', result.user.usuario);
           }, 100);
           
           const welcomeMsg = result.isOffline 

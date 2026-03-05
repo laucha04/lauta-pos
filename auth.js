@@ -338,21 +338,9 @@ async function handleLogout() {
   clearAuthSession();
   
   // Limpiar datos de la app
-  clientes = [];
-  productos = [];
-  ventas = [];
-  cuentas = [];
-  cajaMovimientos = [];
-  cajaBilletes = {};
-  cajaBilletesRegistro = [];
-  DENOMINACIONES.forEach(d => cajaBilletes[d] = 0);
-  
-  // Limpiar UI
-  actualizarListaClientes();
-  actualizarListaProductosYStock();
-  actualizarListaVentas();
-  actualizarResumenCuentas();
-  actualizarMovimientosCaja();
+  if (typeof window.clearAppData === 'function') {
+    window.clearAppData();
+  }
   
   showToast('Sesión cerrada', 'success');
   showAuthModal();
@@ -368,6 +356,13 @@ function showAuthError(elementId, message) {
       errorDiv.style.display = 'none';
     }, 5000);
   }
+}
+
+// Función para reinicializar listeners de la app (llamada después del login)
+function reinitializeAppListeners() {
+  // Los listeners ya están inicializados en codigo.js
+  // Esta función puede expandirse si hay listeners que necesiten reinicialización
+  console.log('App listeners reinitialized');
 }
 
 // Inicializar cuando el DOM esté listo

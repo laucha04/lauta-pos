@@ -3029,6 +3029,9 @@ function showMainApp() {
   
   showSection('productos-stock-section');
 }
+
+// Exponer showMainApp globalmente para que auth.js pueda llamarla
+window.showMainApp = showMainApp;
 // Backup / Exportar datos
 // PDF libraries prefetch support to improve reliability (preload on start and on hover)
 let pdfLibsLoading = false;
