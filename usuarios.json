@@ -1,0 +1,23 @@
+{
+  "1772646628023": {
+    "id": "1772646628023",
+    "usuario": "lautaro",
+    "email": "lautaro@gmail.com",
+    "password_hash": "$2a$10$qmWRgZ8qqnvjqwjwP/05YO3kwHIksUfkq.eiV719gsQQUvUzwTbr6",
+    "created_at": "2026-03-04T17:50:28.023Z"
+  },
+  "1772647964954": {
+    "id": "1772647964954",
+    "usuario": "kevin",
+    "email": "kevin@gmail.com",
+    "password_hash": "$2a$10$9AEm4sJagGyV5s5NWETDYeGMpTIAxMaWKLoJiC4xf858GteYRnUdG",
+    "created_at": "2026-03-04T18:12:44.956Z"
+  },
+  "1772732512702": {
+    "id": "1772732512702",
+    "usuario": "barsa",
+    "email": "lau@gmail.com",
+    "password_hash": "$2a$10$LlgxBcqt27fHumZ6/0kxhOX2FP8NRifcAOD1YZYHnV.hCm2p8UXea",
+    "created_at": "2026-03-05T17:41:52.702Z"
+  }
+}

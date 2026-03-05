@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panel de Ventas y Cuentas Corrientes</title>
+    <!-- Load a modern, readable font (Inter) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <!-- Modal de Autenticación PRIMERO (Login/Registro) - VISIBLE INICIALMENTE -->
+    <div id="auth-modal" class="auth-modal" aria-hidden="false">
+        <div class="auth-container">
+            <div class="auth-card">
+                <h1 class="auth-title">Gestión de Ventas</h1>
+                <p class="auth-subtitle">Sistema de Punto de Venta Seguro</p>
+                
+                <!-- Contenedor para los formularios de login/registro -->
+                <div id="auth-content" class="auth-content">
+                    <!-- Formulario de Login -->
+                    <form id="auth-login-form" class="auth-form auth-form-active">
+                        <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--text); font-size: 1.3rem;">Inicia Sesión</h2>
+                        
+                        <div class="auth-input-group">
+                            <label for="login-usuario" class="auth-label">Usuario o Email</label>
+                            <input type="text" id="login-usuario" class="auth-input" placeholder="tu_usuario" required />
+                        </div>
+                        
+                        <div class="auth-input-group">
+                            <label for="login-password" class="auth-label">Contraseña</label>
+                            <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required />
+                        </div>
+                        
+                        <button type="submit" class="auth-btn auth-btn-primary">Iniciar Sesión</button>
+                        
+                        <div class="auth-toggle">
+                            ¿No tienes cuenta? <button type="button" class="auth-toggle-btn" id="toggle-to-register">Regístrate aquí</button>
+                        </div>
+                        
+                        <div id="login-error" class="auth-error" style="display: none;"></div>
+                    </form>
+                    
+                    <!-- Formulario de Registro -->
+                    <form id="auth-register-form" class="auth-form">
+                        <h2 style="text-align: center; margin-bottom: 1.5rem; color: var(--text); font-size: 1.3rem;">Crear Cuenta</h2>
+                        
+                        <div class="auth-input-group">
+                            <label for="register-usuario" class="auth-label">Usuario</label>
+                            <input type="text" id="register-usuario" class="auth-input" placeholder="tu_usuario" required />
+                            <small class="auth-help">3-20 caracteres, solo letras, números y guiones</small>
+                        </div>
+                        
+                        <div class="auth-input-group">
+                            <label for="register-email" class="auth-label">Email</label>
+                            <input type="email" id="register-email" class="auth-input" placeholder="tu@email.com" required />
+                        </div>
+                        
+                        <div class="auth-input-group">
+                            <label for="register-password" class="auth-label">Contraseña</label>
+                            <input type="password" id="register-password" class="auth-input" placeholder="••••••••" required />
+                            <small class="auth-help">Mínimo 8 caracteres</small>
+                        </div>
+                        
+                        <div class="auth-input-group">
+                            <label for="register-password-confirm" class="auth-label">Confirmar Contraseña</label>
+                            <input type="password" id="register-password-confirm" class="auth-input" placeholder="••••••••" required />
+                        </div>
+                        
+                        <button type="submit" class="auth-btn auth-btn-primary">Crear Cuenta</button>
+                        
+                        <div class="auth-toggle">
+                            ¿Ya tienes cuenta? <button type="button" class="auth-toggle-btn" id="toggle-to-login">Inicia sesión</button>
+                        </div>
+                        
+                        <div id="register-error" class="auth-error" style="display: none;"></div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Contenido Principal - OCULTO INICIALMENTE (hasta después de autenticarse) -->
+    <div id="main-app-container" class="layout" style="display: none;">
+            <header class="main-header">
+                <div class="tabs-bar" role="tablist" aria-label="Navegación principal">
+                    <button class="tab-link" role="tab" aria-selected="true" tabindex="0" data-section="productos-stock-section"><svg class="icon"><use href="#icon-box"/></svg><span>Productos</span></button>
+                    <button class="tab-link" role="tab" aria-selected="false" tabindex="-1" data-section="ventas-section"><svg class="icon"><use href="#icon-pay"/></svg><span>Ventas</span></button>
+                    <button class="tab-link" role="tab" aria-selected="false" tabindex="-1" data-section="cuentas-section"><svg class="icon"><use href="#icon-book"/></svg><span>Cuentas</span></button>
+                    <button class="tab-link" role="tab" aria-selected="false" tabindex="-1" data-section="historial-section"><svg class="icon"><use href="#icon-receipt"/></svg><span>Historial</span></button>
+                    <button class="tab-link" role="tab" aria-selected="false" tabindex="-1" data-section="caja-section"><svg class="icon"><use href="#icon-box"/></svg><span>Movimiento de Caja</span></button>
+                    <div class="tab-actions">
+                        <!-- exit-fullscreen removed: sections are fullscreen by default -->
+                        <div id="auth-user-info" class="auth-user-info" style="display: none;">
+                            <span class="auth-user-name" id="auth-user-display"></span>
+                            <button id="btn-logout" class="btn-logout" title="Cerrar sesión" aria-label="Cerrar sesión">Salir</button>
+                        </div>
+                        <button id="btn-download-json" class="btn btn-primary btn-cta pulse" title="Descargar datos" aria-label="Descargar datos (JSON)">
+                          <svg class="icon" width="16" height="16" aria-hidden="true"><use href="#icon-download"/></svg>
+                          <span style="font-weight:700;margin-left:.4rem">Descargar</span>
+                        </button>
+                    </div>                                                                                                              
+                </div>
+                <h1 id="main-title">Panel de Ventas y Cuentas Corrientes</h1>
+            </header>
+            <main class="main-content">
+                <div class="page-sections">
+                    <!-- Clientes integrado en Cuentas Corrientes (no hay sección separada) -->
+    <!-- Sección Productos y Stock unificada -->
+    <section id="productos-stock-section" class="main-section">
+                <div class="card-header">
+                        <div class="card-title"><svg class="icon icon-bubble" width="18" height="18" aria-hidden="true"><use href="#icon-box"></use></svg><span>Productos & Stock</span></div>
+                    <div style="display:flex;align-items:center;gap:.5rem">
+                        <div class="card-sub">Precios, cantidades y edición rápida</div>
+                        <!-- local barcode scan button inside Productos (matches header styling) -->
+                        <button class="btn btn-ghost open-barcode-in-products" aria-label="Escanear código (Productos)" title="Escanear código" type="button">
+                          <svg class="icon" width="18" height="18" aria-hidden="true"><use href="#icon-barcode"></use></svg>
+                          <span style="font-weight:600;margin-left:.35rem">Escanear</span>
+                        </button>
+                    </div>
+                </div>
+                <!-- Area to show barcode results inside Productos (mirrors modal result but placed here) -->
+                <div id="productos-barcode-result" class="barcode-area" aria-live="polite" role="status" style="display:none;margin-top:.6rem;margin-bottom:.6rem"></div>
+        <form id="form-producto">
+            <label for="producto-nombre" class="sr-only">Nombre del Producto</label>
+            <input type="text" id="producto-nombre" placeholder="Nombre del Producto" aria-label="Nombre del Producto" required />
+            <label for="producto-precio" class="sr-only">Precio</label>
+            <input type="number" id="producto-precio" placeholder="Precio" aria-label="Precio del Producto" min="0" step="0.01" required />
+            <label for="producto-stock" class="sr-only">Stock inicial</label>
+            <input type="number" id="producto-stock" placeholder="Stock inicial" aria-label="Stock inicial del producto" min="0" step="1" required />
+            <label for="producto-codigo" class="sr-only">Código de barras</label>
+            <input type="text" id="producto-codigo" placeholder="Código de barras (opcional)" aria-label="Código de barras del Producto" inputmode="numeric" pattern="[0-9]*" />
+            <button type="submit" class="btn btn-primary"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-plus"></use></svg>Agregar Producto</button>
+        </form>
+                <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem;margin-bottom:.5rem">
+                    <input id="buscar-producto" type="search" placeholder="Buscar productos..." style="flex:1" aria-label="Buscar productos" />
+                    <button type="button" id="limpiar-buscar-productos" class="btn btn-ghost">Limpiar</button>
+                </div>
+                <div id="lista-productos-stock"></div>
+    </section>
+
+        <!-- Sección Ventas -->
+            <section id="ventas-section" class="main-section">
+                <div class="card-header">
+                        <div class="card-title"><svg class="icon icon-bubble" width="18" height="18" aria-hidden="true"><use href="#icon-pay"></use></svg><span>Ventas</span></div>
+                    <div class="card-sub">Agrega productos y registra ventas</div>
+                </div>
+        <form id="form-venta">
+        <!-- Ventas ahora no requiere seleccionar cliente; se registran productos, cantidad y método -->
+                        <div id="productos-venta-container">
+                        </div>
+                        <div style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;margin-top:.25rem;margin-bottom:.25rem;">
+                            <div style="display:flex;gap:.5rem;align-items:center">
+                            <input id="venta-buscar-producto" type="search" placeholder="Buscar producto por nombre o código" aria-label="Buscar producto" style="min-width:220px;padding:.45rem .5rem;border-radius:6px;border:1px solid rgba(0,0,0,0.06)" />
+                            <div id="venta-search-suggestions" class="suggestions" style="min-width:220px"></div>
+                        </div>
+                        <button type="button" id="btn-agregar-producto" class="btn btn-primary">Agregar Producto</button>
+                            <div class="venta-resumen" id="venta-resumen" aria-live="polite" style="flex:1 1 220px;min-width:220px;display:none">
+                                <div id="venta-lineas" class="stack"></div>
+                                <div id="venta-pagos-summary" class="small muted" style="margin-top:.25rem"></div>
+                                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:.5rem">
+                                    <div class="small muted" id="venta-warning" style="display:none;color:var(--danger)"></div>
+                                    <div style="font-weight:700">Total: <span id="venta-total">$0.00</span></div>
+                                </div>
+                            </div>
+                        </div>
+            <label for="venta-fecha" class="sr-only">Fecha</label>
+            <input type="date" id="venta-fecha" aria-label="Fecha" required />
+            <label for="venta-metodo-pago" class="sr-only">Método de Pago</label>
+            <select id="venta-metodo-pago" aria-label="Método de Pago" required>
+                <option value="" disabled selected>Seleccione Método de Pago</option>
+                <option value="efectivo">Efectivo</option>
+                <option value="tarjeta_credito">Tarjeta — Crédito</option>
+                <option value="tarjeta_debito">Tarjeta — Débito</option>
+                <option value="transferencia">Transferencia</option>
+                <option value="mercado_pago">Mercado Pago</option>
+                <option value="qr">QR</option>
+            </select>
+            <div style="display:flex;gap:.5rem;align-items:center;margin-top:.6rem;">
+                <label class="sr-only" for="venta-pago-dividido">Pago dividido</label>
+                <input type="checkbox" id="venta-pago-dividido" />
+                <label for="venta-pago-dividido">Pago dividido</label>
+            </div>
+            <div id="venta-pagos-divididos" style="display:none;margin-top:.5rem;gap:.5rem;">
+                <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;">
+                    <button type="button" id="venta-agregar-parte" class="btn btn-ghost">Agregar parte de pago</button>
+                    <label class="sr-only" for="venta-manual-asignacion">Asignación manual por producto</label>
+                    <input type="checkbox" id="venta-manual-asignacion" />
+                    <label for="venta-manual-asignacion">Asignación manual por producto</label>
+                </div>
+                <div id="venta-lista-pagos" style="display:flex;gap:.5rem;flex-direction:column;margin-top:.5rem;">
+                    <!-- payment parts will be injected here by JS -->
+                </div>
+            </div>
+            <button type="submit" id="btn-registrar-venta" class="btn btn-success"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-receipt"></use></svg>Registrar Venta</button>
+        </form>
+    </section> <!-- lista-ventas removed: ventas history moved to Historial section -->
+
+        <!-- Sección Cuentas Corrientes -->
+    <section id="cuentas-section" class="main-section">
+                <div class="card-header">
+                        <div class="card-title"><svg class="icon icon-bubble" width="18" height="18" aria-hidden="true"><use href="#icon-book"></use></svg><span>Cuentas Corrientes</span></div>
+                    <div class="card-sub">Registra cargos y abonos por cliente</div>
+                </div>
+        <!-- Clientes management now lives here -->
+        <div class="card" style="margin-bottom:.6rem;padding:.6rem;border-radius:6px;border:1px solid var(--muted)">
+            <form id="form-cliente" style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem">
+                <label for="cliente-nombre" class="sr-only">Nombre del Cliente</label>
+                <input type="text" id="cliente-nombre" placeholder="Nombre del Cliente" aria-label="Nombre del Cliente" />
+                <button type="submit" class="btn btn-primary"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-plus"></use></svg>Agregar Cliente</button>
+            </form>
+            <div style="display:flex;gap:.5rem;align-items:center;margin-top:.25rem;margin-bottom:.5rem">
+                <input id="buscar-cliente" type="search" placeholder="Buscar clientes..." style="flex:1" aria-label="Buscar clientes" />
+                <button type="button" id="limpiar-buscar-clientes" class="btn btn-ghost">Limpiar</button>
+            </div>
+            <div id="lista-clientes" style="max-height:160px;overflow:auto;border-top:1px dashed var(--muted);padding-top:.5rem"></div>
+        </div>
+
+        <form id="form-cuenta">
+<label for="cuenta-cliente" class="sr-only">Cliente</label>
+<select id="cuenta-cliente" aria-label="Cliente" required>
+    <option value="" disabled selected>Seleccione Cliente</option>
+</select>
+<label for="cuenta-nombre" class="sr-only">Agregar cliente manualmente</label>
+<input type="text" id="cuenta-nombre" placeholder="Nombre del cliente (opcional)" aria-label="Nombre del cliente (opcional)" style="margin-top:.5rem;" />
+<div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+    <input type="number" id="cuenta-monto" placeholder="Monto" step="0.01" required class="input-inline" />
+    <label for="cuenta-producto" class="sr-only">Producto (opcional)</label>
+    <select id="cuenta-producto" aria-label="Producto (opcional)" class="input-inline">
+        <option value="">Sin producto</option>
+        <!-- JS will populate products -->
+    </select>
+    <input type="number" id="cuenta-producto-cantidad" placeholder="Cantidad" min="1" step="1" value="1" style="width:120px" />
+</div>
+<label for="cuenta-tipo" class="sr-only">Tipo</label>
+<select id="cuenta-tipo" aria-label="Tipo" required>
+    <option value="" disabled selected>Tipo</option>
+    <option value="cargo">Cargo</option>
+    <option value="abono">Abono</option>
+</select>
+            <button type="submit" class="btn btn-primary"><svg class="icon" width="14" height="14" aria-hidden="true"><use href="#icon-box"></use></svg>Registrar movimiento</button>
+        </form>
+        <div id="resumen-cuentas"></div>
+                </section>
+
+            <!-- Sección Historial -->
+            <section id="historial-section" class="main-section">
+                <div class="card-header">
+                    <div class="card-title"><svg class="icon icon-bubble" width="18" height="18" aria-hidden="true"><use href="#icon-book"></use></svg><span>Historial</span></div>
+                    <div class="card-sub">Registros de clientes, productos, ventas y cuentas</div>
+                </div>
+        <div id="historial-controls" style="display:flex;gap:.75rem;align-items:flex-start;flex-wrap:wrap;margin-top:.5rem">
+            <!-- Calendario de mes y control de filtro -->
+            <div id="historial-calendar" class="calendar" aria-label="Calendario de Historial">
+                <div class="calendar-header" style="display:flex;align-items:center;justify-content:space-between;gap:.5rem;margin-bottom:.35rem">
+                    <div style="display:flex;align-items:center;gap:.5rem">
+                        <button id="historial-prev-month" class="btn btn-ghost" aria-label="Mes anterior">◀</button>
+                        <div id="historial-month-label" style="font-weight:700">Mar 2025</div>
+                        <button id="historial-next-month" class="btn btn-ghost" aria-label="Mes siguiente">▶</button>
+                    </div>
+                    <div style="display:flex;gap:.5rem;align-items:center">
+                        <input id="historial-filter-date" type="date" aria-label="Filtrar por fecha" />
+                        <button id="historial-filter-today" class="btn btn-ghost">Hoy</button>
+                        <button id="historial-clear-filter" class="btn btn-ghost">Limpiar</button>
+                    </div>
+                </div>
+                <div class="calendar-grid" role="grid" aria-hidden="false"></div>
+            </div>
+            <!-- Área de resultados filtrados por fecha -->
+            <div id="historial-entries" style="flex:1;min-width:320px;">
+                <div style="display:flex;gap:.5rem;align-items:center;justify-content:space-between">
+                    <div style="font-weight:600">Entradas del día seleccionado</div>
+                    <div class="small muted" id="historial-selected-date-label">(ninguna fecha seleccionada)</div>
+                </div>
+                <div id="historial-ventas" class="historial-list" style="margin-top:.6rem"></div>
+                <div id="historial-caja" class="historial-list" style="margin-top:.6rem"></div>
+                <div id="historial-clientes" class="historial-list" style="margin-top:.6rem"></div>
+                <div id="historial-productos" class="historial-list" style="margin-top:.6rem"></div>
+                <div id="historial-cuentas" class="historial-list" style="margin-top:.6rem"></div>
+            </div>
+        </div>
+    </section>
+            <!-- Sección Movimiento de Caja -->
+            <section id="caja-section" class="main-section">
+                <div class="card-header">
+                    <div class="card-title"><svg class="icon icon-bubble" width="18" height="18" aria-hidden="true"><use href="#icon-box"></use></svg><span>Movimiento de Caja</span></div>
+                    <div class="card-sub">Visualiza caja y registra retiros</div>
+                </div>
+                <div style="margin-top:.6rem;display:flex;gap:.75rem;flex-wrap:wrap;align-items:center">
+                    <div id="caja-total" style="font-weight:700;font-size:1.2rem;">Caja Total (ARS): $0.00</div>
+                </div>
+                <div id="caja-totales-medios" style="margin-top:.6rem;display:flex;gap:.75rem;flex-direction:column;">
+                    <div style="font-weight:600">Totales por Medio de Pago:</div>
+                    <div id="caja-total-tarjeta-credito">Tarjeta Crédito: $0.00</div>
+                    <div id="caja-total-tarjeta-debito">Tarjeta Débito: $0.00</div>
+                    <div id="caja-total-qr">QR: $0.00</div>
+                    <div id="caja-total-transferencia">Transferencia: $0.00</div>
+                    <div id="caja-total-mercado">Mercado Pago: $0.00</div>
+                </div>
+                <form id="form-caja" style="margin-top:1rem;display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+                    <label for="caja-monto" class="sr-only">Monto a retirar</label>
+                    <input id="caja-monto" type="number" placeholder="Monto a retirar" aria-label="Monto a retirar" min="0.01" step="0.01" />
+                    <label for="caja-motivo" class="sr-only">Motivo</label>
+                    <input id="caja-motivo" type="text" placeholder="Motivo (ej: Suministros, Retiro)" aria-label="Motivo del retiro" />
+                    <button type="submit" class="btn btn-primary">Registrar Retiro</button>
+                </form>
+                                <div id="caja-billetes" style="margin-top:1rem;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:.5rem;align-items:center">
+                                    <!-- Billetes rows are rendered by JS (inputs with ids billete-100, etc.) -->
+                                    <div class="billete-row" aria-hidden="true" style="grid-column:1/-1; font-weight:600;">Billetes en Caja (recuento físico)</div>
+                                </div>
+                                <div style="display:flex;gap:.5rem;align-items:center;margin-top:.5rem">
+                                    <div style="display:flex;gap:.5rem;align-items:center;flex-wrap:wrap">
+                                        <label class="sr-only" for="caja-dia-tarjeta-credito">Tarjeta Crédito</label>
+                                        <input id="caja-dia-tarjeta-credito" type="number" placeholder="Tarjeta Crédito" step="0.01" min="0" style="width:140px" />
+                                        <label class="sr-only" for="caja-dia-tarjeta-debito">Tarjeta Débito</label>
+                                        <input id="caja-dia-tarjeta-debito" type="number" placeholder="Tarjeta Débito" step="0.01" min="0" style="width:140px" />
+                                        <label class="sr-only" for="caja-dia-qr">QR</label>
+                                        <input id="caja-dia-qr" type="number" placeholder="QR" step="0.01" min="0" style="width:120px" />
+                                        <label class="sr-only" for="caja-dia-transferencia">Transferencia</label>
+                                        <input id="caja-dia-transferencia" type="number" placeholder="Transferencia" step="0.01" min="0" style="width:160px" />
+                                        <label class="sr-only" for="caja-dia-mercado">Mercado Pago</label>
+                                        <input id="caja-dia-mercado" type="number" placeholder="Mercado Pago" step="0.01" min="0" style="width:160px" />
+                                        <button id="guardar-billetes" class="btn btn-primary">Guardar Billetes</button>
+                                    </div>
+                                </div>
+                                <div id="caja-billetes-historial" style="margin-top:1rem"></div>
+                <div id="movimientos-caja" style="margin-top:1rem"></div>
+            </section>
+            </div> <!-- .page-sections -->
+        </main>
+    </div> <!-- .layout -->
+
+    <!-- QuaggaJS CDN para escaneo de código de barras -->
+    <script src="https://unpkg.com/@ericblade/quagga2@1.2.6/dist/quagga.min.js"></script>
+    <!-- jsPDF + autoTable para exportar PDF (se intentará cargar versiones locales desde /libs/ antes de usar CDN) -->
+    <!-- Intenta pre-cargar copias locales si el desarrollador las colocó en /libs/ -->
+    <link rel="preload" href="/libs/jspdf.umd.min.js" as="script">
+    <link rel="preload" href="/libs/jspdf.plugin.autotable.min.js" as="script">
+    <!-- Preload hints para mejorar la fiabilidad cuando se usa Live Server / Go Live -->
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" as="script" crossorigin>
+    <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js" as="script" crossorigin>
+
+    <!-- Banner informativo que aparece cuando se está preparando la generación de PDF -->
+    <div id="pdf-prep-banner" class="pdf-prep-banner" hidden aria-live="polite" role="status">
+      <div class="pdf-prep-content">
+        <div class="pdf-prep-left">
+          <span class="pdf-spinner" aria-hidden="true"></span>
+          <div>
+            <div style="font-weight:700">Preparando PDF…</div>
+            <div class="small muted">Si la generación tarda, puedes descargar los datos en formato JSON.</div>
+          </div>
+        </div>
+        <div class="pdf-prep-actions">
+          <button id="pdf-download-json-now" class="btn btn-primary">Descargar JSON ahora</button>
+          <button id="pdf-prep-close" class="btn btn-ghost" aria-label="Cerrar preparación">Cerrar</button>
+        </div>
+      </div>
+    </div><!-- Fin de main-app-container -->
+
+    <!-- Modal lector de código de barras -->
+    <div id="barcode-modal" class="modal" aria-hidden="true" tabindex="-1">
+        <div class="modal-content">
+            <button class="close-modal" id="close-barcode-modal" aria-label="Cerrar lector">&times;</button>
+            <h2><svg class="icon"><use href="#icon-barcode"/></svg> Escanear código de barras</h2>
+            <div id="barcode-reader-area">
+                <video id="barcode-video" autoplay muted playsinline style="width:100%;max-width:320px;display:none;"></video>
+                <div id="barcode-fallback">
+                    <label for="barcode-input">O ingresa el código manualmente:</label>
+                    <input type="text" id="barcode-input" autocomplete="off" inputmode="numeric" pattern="[0-9]*" />
+                    <button id="barcode-manual-btn">Agregar</button>
+                </div>
+            </div>
+            <div id="barcode-result"></div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <script src="auth-system.js"></script>
+    <script src="codigo.js"></script>
+
+    <!-- SVG Icons Sprite -->
+    <svg style="display: none;" xmlns="http://www.w3.org/2000/svg">
+        <symbol id="icon-box" viewBox="0 0 24 24">
+            <path d="M20 7V5c0-1.1-.9-2-2-2H6c-1.1 0-2 .9-2 2v2H2v10c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V7h-2zM6 5h12v2H6V5zm14 12H4V9h2v2h2V9h8v2h2V9h2v8z"/>
+        </symbol>
+        <symbol id="icon-pay" viewBox="0 0 24 24">
+            <path d="M20 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/>
+        </symbol>
+        <symbol id="icon-book" viewBox="0 0 24 24">
+            <path d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/>
+        </symbol>
+        <symbol id="icon-receipt" viewBox="0 0 24 24">
+            <path d="M18 17H6v-2h12v2zm0-4H6v-2h12v2zm0-4H6V7h12v2zM3 22l1.5-1.5L6 22l1.5-1.5L9 22l1.5-1.5L12 22l1.5-1.5L15 22l1.5-1.5L18 22l1.5-1.5L21 22V2l-1.5 1.5L18 2l-1.5 1.5L15 2l-1.5 1.5L12 2l-1.5 1.5L9 2 7.5 3.5 6 2 4.5 3.5 3 2v20z"/>
+        </symbol>
+        <symbol id="icon-download" viewBox="0 0 24 24">
+            <path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/>
+        </symbol>
+        <symbol id="icon-barcode" viewBox="0 0 24 24">
+            <path d="M2 6h2v12H2V6zm4 0h1v12H6V6zm3 0h2v12H9V6zm4 0h1v12h-1V6zm3 0h2v12h-2V6zm4 0h1v12h-1V6z"/>
+        </symbol>
+        <symbol id="icon-plus" viewBox="0 0 24 24">
+            <path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/>
+        </symbol>
+        <symbol id="icon-copy" viewBox="0 0 24 24">
+            <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+        </symbol>
+    </svg>
+        <!-- Confirmation modal (hidden by default) -->
+        <div id="confirm-modal" class="modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="confirm-title">
+            <div class="modal-overlay" data-close-modal></div>
+            <div class="modal-panel" role="document">
+                <header class="modal-header">
+                    <h3 id="confirm-title">Confirmación</h3>
+                </header>
+                <div id="confirm-message" class="modal-body">¿Estás seguro?</div>
+                <footer class="modal-footer">
+                    <button id="confirm-cancel" class="btn btn-ghost">Cancelar</button>
+                    <button id="confirm-ok" class="btn btn-danger">Eliminar</button>
+                </footer>
+            </div>
+        </div>
+        <!-- Undo history panel (shows recent undoable actions) -->
+        <div id="undo-panel" class="undo-panel" aria-live="polite" aria-atomic="true"></div>
+        <button id="btn-backup" class="btn btn-ghost" title="Descargar backup"> <svg class="icon"><use href="#icon-copy"/></svg> Backup</button>
+<button id="btn-import" class="btn btn-ghost" title="Importar backup">Import</button>
+<button id="btn-export-csv" class="btn btn-ghost" title="Exportar CSV">Export CSV</button>
+<button id="btn-copy-json" class="btn btn-ghost" title="Copiar JSON">Copiar JSON</button>
+<input id="input-import-file" type="file" accept=".json,.enc" style="display:none"/>
+</body>
+</html>

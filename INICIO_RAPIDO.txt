@@ -1,0 +1,160 @@
+╔════════════════════════════════════════════════════════════╗
+║  SISTEMA DE PUNTO DE VENTA (POS) - GUÍA RÁPIDA DE INICIO   ║
+╚════════════════════════════════════════════════════════════╝
+
+📋 REQUISITOS
+─────────────────────────────────────────────────────────────
+✓ Node.js 14 o superior
+✓ npm (incluido con Node.js)
+✓ Navegador moderno (Chrome, Firefox, Safari, Edge)
+
+
+🚀 PASOS PARA COMENZAR
+─────────────────────────────────────────────────────────────
+
+1️⃣  INSTALAR DEPENDENCIAS
+   Abre una terminal en la carpeta del proyecto y ejecuta:
+   
+   $ npm install
+
+2️⃣  INICIAR EL SERVIDOR
+   En la misma terminal, ejecuta:
+   
+   $ npm start
+   
+   Deberías ver:
+   ✓ "Servidor iniciado en http://localhost:3000"
+   ✓ "Sistema de autenticación activado"
+
+3️⃣  ABRIR EN EL NAVEGADOR
+   Abre tu navegador favorito y ve a:
+   
+   http://localhost:3000
+
+4️⃣  CREAR CUENTA (Primera vez)
+   • Haz click en "Regístrate aquí"
+   • Completa los datos:
+     - Usuario: 3-20 caracteres (letras, números, guiones)
+     - Email: Un email válido
+     - Contraseña: Mínimo 8 caracteres
+   • Haz click en "Crear Cuenta"
+
+5️⃣  INICIAR SESIÓN
+   • Ingresa tu usuario o email
+   • Ingresa tu contraseña
+   • Haz click en "Iniciar Sesión"
+
+6️⃣  ¡LISTO!
+   Ya puedes comenzar a usar el sistema POS:
+   • Productos: Agregar y gestionar productos
+   • Ventas: Registrar transacciones
+   • Cuentas: Control de crédito a clientes
+   • Historial: Ver todas las operaciones
+   • Caja: Movimiento de efectivo
+
+
+💡 CONSEJOS ÚTILES
+─────────────────────────────────────────────────────────────
+
+✓ Los datos se guardan automáticamente en el servidor
+✓ Puedes descargar tus datos en JSON en cualquier momento
+✓ La sesión dura 7 días antes de expirar
+✓ Cierra sesión cuando no la uses para mayor seguridad
+
+
+🔧 VARIABLES DE ENTORNO (OPCIONAL)
+─────────────────────────────────────────────────────────────
+
+Para cambiar configuración avanzada:
+
+1. Copia .env.example a .env:
+   $ cp .env.example .env
+
+2. Edita el archivo .env con tus valores:
+   PORT=3000
+   JWT_SECRET=tu-secreto-personalizado
+
+3. Reinicia el servidor para que se apliquen los cambios
+
+
+📊 CARACTERÍSTICAS PRINCIPALES
+─────────────────────────────────────────────────────────────
+
+AUTENTICACIÓN SEGURA
+├─ Registro de nuevos usuarios
+├─ Login seguro con JWT
+├─ Contraseñas cifradas con bcrypt
+└─ Datos protegidos por usuario
+
+GESTIÓN DE PRODUCTOS
+├─ Agregar productos con precios y stock
+├─ Editar información en tiempo real
+├─ Códigos de barras y códigos especiales
+└─ Búsqueda rápida
+
+MÓDULO DE VENTAS
+├─ Registrar transacciones
+├─ Múltiples métodos de pago
+├─ Pago dividido entre métodos
+└─ Historial completo
+
+CUENTAS CORRIENTES
+├─ Registrar deudas de clientes
+├─ Registrar pagos/abonos
+├─ Ver saldo por cliente
+└─ Llevar cuenta de créditos
+
+MOVIMIENTO DE CAJA
+├─ Registrar retiros
+├─ Contar billetes físicos
+├─ Seguimiento de efectivo
+└─ Historial de movimientos
+
+
+❌ SOLUCIÓN DE PROBLEMAS
+─────────────────────────────────────────────────────────────
+
+Problema: "Error de conexión"
+Solución: Asegúrate de que:
+  • El servidor está ejecutándose (npm start)
+  • Estás usando http://localhost:3000 (no https)
+  • No hay otro servidor en el puerto 3000
+
+Problema: "Error al guardar datos"
+Solución: Los datos se guardarán localmente si el servidor falla.
+  • Verifica que el servidor esté funcionando
+  • Revisa la consola del navegador (F12) para ver errores
+
+Problema: "No puedo registrarme"
+Solución: Verifica que:
+  • El usuario tiene 3-20 caracteres
+  • Solo usa letras, números, guiones y guiones bajos
+  • El email es válido
+  • La contraseña tiene al menos 8 caracteres
+  • El usuario o email no esté ya registrado
+
+
+📞 SOPORTE
+─────────────────────────────────────────────────────────────
+
+Para más información, revisa:
+├─ README_AUTH.md (Documentación completa)
+├─ CAMBIOS_IMPLEMENTADOS.md (Lista de cambios)
+└─ .env.example (Variables de configuración)
+
+
+🛑 DETENER EL SERVIDOR
+─────────────────────────────────────────────────────────────
+
+Para detener el servidor en cualquier momento:
+
+Presiona: Ctrl + C
+
+(En Windows: Ctrl + C, en Mac: Cmd + C)
+
+
+✅ ¡LISTO PARA COMENZAR!
+─────────────────────────────────────────────────────────────
+
+Tu sistema POS está completamente configurado y listo para usar.
+¡Bienvenido! 🎉

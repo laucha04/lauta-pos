@@ -1,0 +1,25 @@
+{
+  "name": "lauta-pos",
+  "version": "1.0.0",
+  "description": "POS app with local persistence and server-side SQLite",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js",
+    "backup-db": "node backup-db.js",
+    "test:playwright": "npx playwright test",
+    "test:api": "npx playwright test api.spec.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "express": "^4.22.1",
+    "jsonwebtoken": "^9.0.3",
+    "sqlite3": "^5.1.6"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.40.0",
+    "nodemon": "^2.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}

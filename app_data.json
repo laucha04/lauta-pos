@@ -1,0 +1,120 @@
+{
+  "1772646628023": {
+    "clientes": [],
+    "productos": [],
+    "ventas": [],
+    "cuentas": [],
+    "cajaMovimientos": [],
+    "cajaBilletes": {},
+    "cajaBilletesRegistro": []
+  },
+  "1772647964954": {
+    "clientes": [
+      {
+        "nombre": "Maria Paz",
+        "fecha": "2026-03-04"
+      }
+    ],
+    "productos": [
+      {
+        "nombre": "Oreo",
+        "precio": 2500,
+        "stock": 16,
+        "codigoEspecial": "SP598232",
+        "fecha": "2026-03-04"
+      },
+      {
+        "nombre": "block",
+        "precio": 5000,
+        "stock": 15,
+        "codigoEspecial": "SP438784",
+        "fecha": "2026-03-04"
+      },
+      {
+        "nombre": "Avena Granix x 400 grms",
+        "precio": 3000,
+        "stock": 48,
+        "codigoEspecial": "SP659775",
+        "fecha": "2026-03-04"
+      }
+    ],
+    "ventas": [
+      {
+        "cliente": null,
+        "producto": 0,
+        "cantidad": 2,
+        "fecha": "2026-03-04",
+        "metodoPago": "mercado_pago",
+        "pagos": [
+          {
+            "metodo": "mercado_pago",
+            "monto": 5000
+          }
+        ],
+        "saleId": "sale-1772647992355-42zj"
+      },
+      {
+        "cliente": null,
+        "producto": 1,
+        "cantidad": 5,
+        "fecha": "2026-03-04",
+        "metodoPago": "efectivo",
+        "pagos": [
+          {
+            "metodo": "efectivo",
+            "monto": 25000
+          }
+        ],
+        "saleId": "sale-1772648240642-j4y0"
+      },
+      {
+        "cliente": null,
+        "producto": 2,
+        "cantidad": 2,
+        "fecha": "2026-03-04",
+        "metodoPago": "efectivo",
+        "pagos": [
+          {
+            "metodo": "efectivo",
+            "monto": 6000
+          }
+        ],
+        "saleId": "sale-1772648396645-s9ju"
+      },
+      {
+        "cliente": null,
+        "producto": 0,
+        "cantidad": 2,
+        "fecha": "2026-03-04",
+        "metodoPago": "efectivo",
+        "pagos": [
+          {
+            "metodo": "efectivo",
+            "monto": 5000
+          }
+        ],
+        "saleId": "sale-1772648396645-s9ju"
+      }
+    ],
+    "cuentas": [
+      {
+        "cliente": 0,
+        "monto": 2500,
+        "tipo": "abono",
+        "fecha": "2026-03-04"
+      }
+    ],
+    "cajaMovimientos": [],
+    "cajaBilletes": {},
+    "cajaBilletesRegistro": []
+  },
+  "1772732512702": {
+    "clientes": [],
+    "productos": [],
+    "ventas": [],
+    "cuentas": [],
+    "cajaMovimientos": [],
+    "cajaBilletes": {},
+    "cajaBilletesRegistro": []
+  }
+}
